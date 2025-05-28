@@ -1,7 +1,7 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.148.0/build/three.module.js';
 
 let scene, camera, renderer, pitchData = {}, balls = [];
-let activeTypes = new Set(), playing = true;
+let activeTypes = new Set(), playing = false;
 const clock = new THREE.Clock();
 
 async function loadPitchData() {
@@ -23,11 +23,8 @@ function createHalfColorMaterial(pitchType) {
   canvas.height = 2;
   const ctx = canvas.getContext('2d');
 
-  // Top half — pitch color
   ctx.fillStyle = hex;
   ctx.fillRect(0, 0, 2, 1);
-
-  // Bottom half — white
   ctx.fillStyle = '#FFFFFF';
   ctx.fillRect(0, 1, 2, 1);
 
@@ -60,6 +57,7 @@ function setupScene() {
   const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
   dirLight.position.set(-10, 15, -25);
   scene.add(dirLight);
+
   const plateLight = new THREE.PointLight(0xffffff, 0.6, 100);
   plateLight.position.set(0, 3, -60.5);
   scene.add(plateLight);
@@ -233,10 +231,25 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-document.getElementById('toggleBtn').addEventListener('click', () => {
+// Play/Pause
+const toggleBtn = document.getElementById('toggleBtn');
+toggleBtn.addEventListener('click', () => {
   playing = !playing;
-  document.getElementById('toggleBtn').textContent = playing ? 'Pause' : 'Play';
+  toggleBtn.textContent = playing ? 'Pause' : 'Play';
   playing ? clock.start() : clock.stop();
+});
+
+// Replay
+document.getElementById('replayBtn').addEventListener('click', () => {
+  const now = clock.getElapsedTime();
+  for (let ball of balls) {
+    ball.userData.t0 = now;
+    ball.position.set(
+      ball.userData.release.x,
+      ball.userData.release.y,
+      ball.userData.release.z
+    );
+  }
 });
 
 (async () => {
