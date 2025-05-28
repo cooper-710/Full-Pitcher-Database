@@ -171,9 +171,11 @@ function addBall(pitch, pitchType) {
   const ball = new THREE.Mesh(ballGeo, mat);
   ball.castShadow = true;
 
+  const t0 = clock.getElapsedTime();
+
   ball.userData = {
     type: pitchType,
-    t0: clock.getElapsedTime(),
+    t0: t0,
     release: {
       x: -pitch.release_pos_x,
       y: pitch.release_pos_z + 0.65,
@@ -191,8 +193,14 @@ function addBall(pitch, pitchType) {
     }
   };
 
-  ball.rotationSpeed = pitch.release_spin_rate / 60.0 * 0.01;
-  ball.rotationAxis = new THREE.Vector3(0, 1, 0); // placeholder, customize later
+  ball.position.set(
+    ball.userData.release.x,
+    ball.userData.release.y,
+    ball.userData.release.z
+  );
+
+  ball.rotationSpeed = (pitch.release_spin_rate || 0) / 60.0;
+  ball.rotationAxis = new THREE.Vector3(0, 1, 0); // placeholder axis
 
   balls.push(ball);
   scene.add(ball);
@@ -216,15 +224,14 @@ function animate() {
     const t = now - t0;
 
     const z = release.z + velocity.z * t + 0.5 * accel.z * t * t;
-    if (z <= -60.5) continue; // stop at plate
+    if (z <= -60.5) continue;
 
     ball.position.x = release.x + velocity.x * t + 0.5 * accel.x * t * t;
     ball.position.y = release.y + velocity.y * t + 0.5 * accel.y * t * t;
     ball.position.z = z;
 
-    // spin
     if (ball.rotationAxis && ball.rotationSpeed) {
-      ball.rotateOnAxis(ball.rotationAxis, ball.rotationSpeed);
+      ball.rotateOnAxis(ball.rotationAxis, ball.rotationSpeed * 0.01);
     }
   }
 
