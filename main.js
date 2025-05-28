@@ -12,6 +12,7 @@ const pitchColors = {
   CH: '#008000', FS: '#00CED1', FO: '#B8860B', SC: '#D2691E',
   EP: '#FFD700', KN: '#7FFFD4', SV: '#4682B4', CS: '#CD5C5C'
 };
+
 init();
 
 async function init() {
@@ -32,6 +33,7 @@ async function init() {
   buildUI();
   animate();
 }
+
 async function loadPitchData() {
   const res = await fetch('pitch_data.json');
   return await res.json();
@@ -51,42 +53,62 @@ function addStrikeZone() {
   line.position.set(0, 0, -60.5);
   scene.add(line);
 }
+
 function createBalls() {
   balls = [];
+  for (const team in pitchData) {
+    for (const pitcher in pitchData[team]) {
+      const pitches = pitchData[team][pitcher];
+      for (const pitchType in pitches) {
+        const pitch = pitches[pitchType];
+        const color = new THREE.Color(pitchColors[pitchType] || '#FFFFFF');
+        const geometry = new THREE.SphereGeometry(0.7, 32, 32);
+        const material = new THREE.MeshStandardMaterial({ color });
+        const ball = new THREE.Mesh(geometry, material);
 
-  for (const pitch of pitchData) {
-    const colorHex = pitchColors[pitch.pitch_type] || '#FFFFFF';
-    const color = new THREE.Color(colorHex);
-    const geometry = new THREE.SphereGeometry(0.7, 32, 32);
-    const material = new THREE.MeshStandardMaterial({ color });
+        const spinRateRPS = (pitch.release_spin_rate || 0) / 60; // rev/s
+        const spinAxisRad = (pitch.spin_axis || 0) * (Math.PI / 180);
+        const axis = new THREE.Vector3(
+          Math.cos(spinAxisRad), 0, Math.sin(spinAxisRad)
+        ).normalize();
 
-    const ball = new THREE.Mesh(geometry, material);
-    ball.userData = {
-      points: pitch.points,
-      frame: 0,
-      pitch_type: pitch.pitch_type
-    };
-    scene.add(ball);
-    balls.push(ball);
+        ball.userData = {
+          pitch_type: pitchType,
+          vx0: pitch.vx0,
+          vy0: pitch.vy0,
+          vz0: pitch.vz0,
+          ax: pitch.ax,
+          ay: pitch.ay,
+          az: pitch.az,
+          t: 0,
+          release_x: pitch.release_pos_x,
+          release_y: -2.03,
+          release_z: pitch.release_pos_z,
+          spin_axis: axis,
+          spin_rate: spinRateRPS * 2 * Math.PI // radians per second
+        };
+
+        ball.position.set(pitch.release_pos_x, pitch.release_pos_z, -2.03);
+        scene.add(ball);
+        balls.push(ball);
+        activeTypes.add(pitchType);
+      }
+    }
   }
 }
+
 function buildUI() {
-  const uiPanel = document.getElementById('ui-panel');
-  const types = [...new Set(pitchData.map(p => p.pitch_type))];
-
-  types.forEach(type => {
-    activeTypes.add(type);
-
+  const panel = document.getElementById('ui-panel');
+  activeTypes.forEach(pitchType => {
     const label = document.createElement('label');
-    label.innerHTML = `<input type="checkbox" data-pitch="${type}" checked> ${type}`;
+    label.innerHTML = `<input type="checkbox" data-pitch="${pitchType}" checked> ${pitchType}`;
     label.querySelector('input').addEventListener('change', e => {
       const val = e.target.dataset.pitch;
       if (e.target.checked) activeTypes.add(val);
       else activeTypes.delete(val);
     });
-
-    uiPanel.appendChild(label);
-    uiPanel.appendChild(document.createElement('br'));
+    panel.appendChild(label);
+    panel.appendChild(document.createElement('br'));
   });
 
   document.getElementById('play-pause').addEventListener('click', () => {
@@ -97,6 +119,7 @@ function buildUI() {
 
 function animate() {
   requestAnimationFrame(animate);
+  const dt = clock.getDelta();
 
   if (playing) {
     for (const ball of balls) {
@@ -104,16 +127,22 @@ function animate() {
         ball.visible = false;
         continue;
       }
-
       ball.visible = true;
-      const pts = ball.userData.points;
-      if (ball.userData.frame < pts.length) {
-        const pt = pts[ball.userData.frame];
-        ball.position.set(pt.x, pt.y, pt.z);
-        ball.userData.frame++;
-      } else {
-        ball.userData.frame = 0;
-      }
+
+      ball.userData.t += dt;
+      const t = ball.userData.t;
+
+      const x = ball.userData.release_x + ball.userData.vx0 * t + 0.5 * ball.userData.ax * t * t;
+      const y = ball.userData.release_y + ball.userData.vy0 * t + 0.5 * ball.userData.ay * t * t;
+      const z = ball.userData.release_z + ball.userData.vz0 * t + 0.5 * ball.userData.az * t * t;
+
+      ball.position.set(x, z, y);
+
+      // Apply spin
+      const angle = ball.userData.spin_rate * dt;
+      ball.rotateOnAxis(ball.userData.spin_axis, angle);
+
+      if (y < -60.5) ball.userData.t = 0;
     }
   }
 
