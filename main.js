@@ -11,8 +11,8 @@ async function loadPitchData() {
 
 function createHalfColorMaterial(pitchType) {
   const colorMap = {
-    FF: '#FF0000', FC: '#FF8C00', SI: '#8B4513', SL: '#0000FF',
-    CH: '#00FF00', CU: '#8A2BE2', ST: '#800000', KC: '#4B0082',
+    FF: '#FF0000', SL: '#0000FF', CH: '#00FF00', KC: '#4B0082',
+    SI: '#8B4513', CU: '#8A2BE2', FC: '#FF8C00', ST: '#800000',
     FS: '#008B8B', EP: '#FFD700', KN: '#AAAAAA', SC: '#E9967A',
     SV: '#F08080', CS: '#A52A2A', FO: '#DAA520'
   };
@@ -22,17 +22,22 @@ function createHalfColorMaterial(pitchType) {
   canvas.width = 2;
   canvas.height = 2;
   const ctx = canvas.getContext('2d');
+
+  // Top half — pitch color
   ctx.fillStyle = hex;
-  ctx.fillRect(0, 0, 2, 1); // top half
+  ctx.fillRect(0, 0, 2, 1);
+
+  // Bottom half — white
   ctx.fillStyle = '#FFFFFF';
-  ctx.fillRect(0, 1, 2, 1); // bottom half
+  ctx.fillRect(0, 1, 2, 1);
 
   const texture = new THREE.CanvasTexture(canvas);
-  texture.minFilter = THREE.LinearFilter;
+  texture.minFilter = THREE.NearestFilter;
+  texture.magFilter = THREE.NearestFilter;
 
   return new THREE.MeshStandardMaterial({
     map: texture,
-    roughness: 0.3,
+    roughness: 0.4,
     metalness: 0.1
   });
 }
@@ -64,7 +69,6 @@ function setupScene() {
     new THREE.MeshStandardMaterial({ color: 0x1e472d, roughness: 1 })
   );
   ground.rotation.x = -Math.PI / 2;
-  ground.receiveShadow = true;
   scene.add(ground);
 
   const zone = new THREE.LineSegments(
@@ -87,7 +91,6 @@ function setupScene() {
   );
   plate.rotation.x = -Math.PI / 2;
   plate.position.set(0, 0.011, -60.5);
-  plate.castShadow = true;
   scene.add(plate);
 
   window.addEventListener('resize', () => {
@@ -199,9 +202,6 @@ function addBall(pitch, pitchType) {
     ball.userData.release.z
   );
 
-  ball.rotationSpeed = (pitch.release_spin_rate || 0) / 60.0;
-  ball.rotationAxis = new THREE.Vector3(0, 1, 0); // placeholder axis
-
   balls.push(ball);
   scene.add(ball);
 }
@@ -218,21 +218,15 @@ function removeBall(pitchType) {
 
 function animate() {
   const now = clock.getElapsedTime();
-
   for (let ball of balls) {
     const { t0, release, velocity, accel } = ball.userData;
     const t = now - t0;
-
     const z = release.z + velocity.z * t + 0.5 * accel.z * t * t;
     if (z <= -60.5) continue;
 
     ball.position.x = release.x + velocity.x * t + 0.5 * accel.x * t * t;
     ball.position.y = release.y + velocity.y * t + 0.5 * accel.y * t * t;
     ball.position.z = z;
-
-    if (ball.rotationAxis && ball.rotationSpeed) {
-      ball.rotateOnAxis(ball.rotationAxis, ball.rotationSpeed * 0.01);
-    }
   }
 
   renderer.render(scene, camera);
