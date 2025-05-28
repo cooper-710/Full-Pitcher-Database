@@ -6,7 +6,7 @@ let activeTypes = new Set(), playing = true;
 const clock = new THREE.Clock();
 
 async function loadPitchData() {
-  const res = await fetch('./pitch_data.json');
+  const res = await fetch('./pitch_data_full.json');
   return await res.json();
 }
 
