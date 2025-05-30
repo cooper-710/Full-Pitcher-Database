@@ -138,12 +138,14 @@ function setupScene() {
   ground.rotation.x = -Math.PI / 2;
   scene.add(ground);
 
-  const zone = new THREE.LineSegments(
-    new THREE.EdgesGeometry(new THREE.PlaneGeometry(1.42, 2.0, 1.0)),
-    new THREE.LineBasicMaterial({ color: 0x000000 })
-  );
-  zone.position.set(0, 2.5, -60.5);
-  scene.add(zone);
+  // === Strike Zone (Visible Black Box Outline) ===
+const boxGeo = new THREE.BoxGeometry(1.42, 2.0, 1.0);  // increased depth to 1.0
+const edges = new THREE.EdgesGeometry(boxGeo);
+const lineMat = new THREE.LineBasicMaterial({ color: 0x000000 });
+const zone = new THREE.LineSegments(edges, lineMat);
+zone.position.set(0, 2.5, -60.5);
+scene.add(zone);
+
 
   const shape = new THREE.Shape();
   shape.moveTo(-0.85, 0);
