@@ -156,7 +156,7 @@ function setupScene() {
   scene.add(mound);
                     new THREE.EdgesGeometry(new THREE.PlaneGeometry(1.42, 2.0)),
     new THREE.LineBasicMaterial({ color: 0x00ffff })
-  );
+  
   zone.position.set(0, 2.5, -60.5);
   scene.add(zone);
 
