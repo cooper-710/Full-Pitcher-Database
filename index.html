@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MLB Pitch Visualizer</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #111;
+    }
+
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    #controls {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 16px;
+      border-radius: 12px;
+      z-index: 100;
+      max-width: 90vw;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    select {
+      width: 100%;
+      padding: 6px 10px;
+      margin-bottom: 12px;
+      border-radius: 6px;
+      border: none;
+      font-size: 14px;
+      background: #333;
+      color: white;
+    }
+
+    #pitchCheckboxes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .checkbox-group label {
+      margin: 0;
+      font-size: 13px;
+    }
+
+    button {
+      padding: 8px 16px;
+      margin-right: 8px;
+      border-radius: 6px;
+      border: none;
+      background-color: #00cccc;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      #controls {
+        font-size: 12px;
+        padding: 12px;
+        top: auto;
+        bottom: 12px;
+        left: 12px;
+        right: 12px;
+      }
+      select, button {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <label for="teamSelect">Team:</label>
+    <select id="teamSelect">
+      <option disabled selected>Select Team</option>
+    </select>
+
+    <label for="pitcherSelect">Pitcher:</label>
+    <select id="pitcherSelect">
+      <option disabled selected>Select Pitcher</option>
+    </select>
+
+    <div id="pitchCheckboxes"></div>
+
+    <button id="toggleBtn">Pause</button>
+    <button id="replayBtn">Replay</button>
+  </div>
+
+  <canvas id="three-canvas"></canvas>
+  <script type="module" src="main.js"></script>
+</body>
+</html>
