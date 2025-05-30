@@ -138,8 +138,23 @@ function setupScene() {
   ground.rotation.x = -Math.PI / 2;
   scene.add(ground);
 
+// Replaced with black outlined strike zone and mound
+
   const zone = new THREE.LineSegments(
-    new THREE.EdgesGeometry(new THREE.PlaneGeometry(1.42, 2.0)),
+    new THREE.EdgesGeometry(new THREE.BoxGeometry(1.42, 2.0, 0.1)),
+    new THREE.LineBasicMaterial({ color: 0x000000 })
+  );
+  zone.position.set(0, 2.5, -60.5);
+  scene.add(zone);
+
+  const mound = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.1, 6, 0.75, 32, 1, true),
+    new THREE.MeshStandardMaterial({ color: 0x8B4513, roughness: 0.9 })
+  );
+  mound.rotation.x = Math.PI / 2;
+  mound.position.set(0, 0.375, 0);
+  scene.add(mound);
+                    new THREE.EdgesGeometry(new THREE.PlaneGeometry(1.42, 2.0)),
     new THREE.LineBasicMaterial({ color: 0x00ffff })
   );
   zone.position.set(0, 2.5, -60.5);
