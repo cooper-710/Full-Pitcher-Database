@@ -138,27 +138,21 @@ function setupScene() {
   ground.rotation.x = -Math.PI / 2;
   scene.add(ground);
 
-
-// === Strike Zone (Black Outline Box) ===
-const zone = new THREE.LineSegments(
-  new THREE.EdgesGeometry(new THREE.BoxGeometry(1.42, 2.0, 0.1)),
-  new THREE.LineBasicMaterial({ color: 0x000000 })
-);
-zone.position.set(0, 2.5, -60.5);
-scene.add(zone);
-
-// === Realistic Mound ===
-const mound = new THREE.Mesh(
-  new THREE.CylinderGeometry(0.1, 6, 0.75, 32, 1, true),
-  new THREE.MeshStandardMaterial({ color: 0x8B4513, roughness: 0.9 })
-);
-mound.rotation.x = Math.PI / 2;
-mound.position.set(0, 0.375, 0);
-scene.add(mound);
-    new THREE.EdgesGeometry(new THREE.PlaneGeometry(1.42, 2.0)),
-    new THREE.LineBasicMaterial({ color: 0x00ffff })
+  // === Strike Zone (Black Box Outline) ===
+  const zone = new THREE.LineSegments(
+    new THREE.EdgesGeometry(new THREE.BoxGeometry(1.42, 2.0, 0.1)),
+    new THREE.LineBasicMaterial({ color: 0x000000 })
   );
   zone.position.set(0, 2.5, -60.5);
+  scene.add(zone);
+
+  // === Realistic Mound ===
+  const moundGeometry = new THREE.CylinderGeometry(0.1, 6, 0.75, 32, 1, true);
+  const moundMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513, roughness: 0.9 });
+  const mound = new THREE.Mesh(moundGeometry, moundMaterial);
+  mound.rotation.x = Math.PI / 2;
+  mound.position.set(0, 0.375, 0);
+  scene.add(mound);
 
   const shape = new THREE.Shape();
   shape.moveTo(-0.85, 0);
