@@ -139,7 +139,7 @@ function setupScene() {
   scene.add(ground);
 
   const zone = new THREE.LineSegments(
-    new THREE.EdgesGeometry(new THREE.PlaneGeometry(1.42, 2.0, 0.1)),
+    new THREE.EdgesGeometry(new THREE.PlaneGeometry(1.42, 2.0, 1.0)),
     new THREE.LineBasicMaterial({ color: 0x000000 })
   );
   zone.position.set(0, 2.5, -60.5);
