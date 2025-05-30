@@ -139,9 +139,9 @@ function setupScene() {
   scene.add(ground);
 
 // === Strike Zone (TEMP - BRIGHT RED OUTLINE FOR DEBUGGING) ===
-  const boxGeo = new THREE.BoxGeometry(1.42, 2.0, 1.0);
+  const boxGeo = new THREE.BoxGeometry(1.42, 2.0);
   const edges = new THREE.EdgesGeometry(boxGeo);
-  const lineMat = new THREE.LineBasicMaterial({ color: 0xff0000 });
+  const lineMat = new THREE.LineBasicMaterial({ color: 0x000000 });
   const zone = new THREE.LineSegments(edges, lineMat);
   zone.position.set(0, 2.5, -60.5);
   scene.add(zone);
