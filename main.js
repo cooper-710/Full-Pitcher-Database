@@ -118,6 +118,19 @@ function setupScene() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x87CEEB);
 
+  // === Mound ===
+  const moundRadius = 1.5;
+  const moundHeight = 0.2;
+
+  const moundGeometry = new THREE.CylinderGeometry(moundRadius, moundRadius, moundHeight, 32);
+  const moundMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 }); // SaddleBrown
+  const mound = new THREE.Mesh(moundGeometry, moundMaterial);
+
+// Position mound centered at x=0, z=0, and slightly below ground
+  mound.position.set(0, -moundHeight / 2, 0);
+  scene.add(mound);
+
+
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
   camera.position.set(0, 2.5, -65);
   camera.lookAt(0, 2.5, 0);
