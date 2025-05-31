@@ -146,17 +146,25 @@ function setupScene() {
 
   scene.add(new THREE.AmbientLight(0xffffff, 0.4));
   const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-  dirLight.position.set(-10, 15, -25);
+  dirLight.position.set(5, 10, 5); // slightly behind pitcher, angled down
   dirLight.castShadow = true;
+
   dirLight.shadow.mapSize.width = 1024;
   dirLight.shadow.mapSize.height = 1024;
   dirLight.shadow.camera.near = 1;
   dirLight.shadow.camera.far = 100;
-  dirLight.shadow.camera.left = -50;
-  dirLight.shadow.camera.right = 50;
-  dirLight.shadow.camera.top = 50;
-  dirLight.shadow.camera.bottom = -50;
+  dirLight.shadow.camera.left = -20;
+  dirLight.shadow.camera.right = 20;
+  dirLight.shadow.camera.top = 20;
+  dirLight.shadow.camera.bottom = -20;
+
+  const dirTarget = new THREE.Object3D();
+  dirTarget.position.set(0, 0, 0); // focus light on the mound
+  scene.add(dirTarget);
+  dirLight.target = dirTarget;
+
   scene.add(dirLight);
+
 
   const plateLight = new THREE.PointLight(0xffffff, 0.6, 100);
   plateLight.position.set(0, 3, -60.5);
