@@ -133,7 +133,7 @@ function setupScene() {
   const rubberGeometry = new THREE.BoxGeometry(1, 0.05, 0.18); // Width, height, depth in feet
   const rubberMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
   const rubber = new THREE.Mesh(rubberGeometry, rubberMaterial);
-  rubber.position.set(0, 1.025, 0);
+  rubber.position.set(0, 1.05, 0);
   scene.add(rubber);
   rubber.castShadow = true;
   rubber.receiveShadow = true;
@@ -145,8 +145,14 @@ function setupScene() {
   scene.add(camera);
 
   scene.add(new THREE.AmbientLight(0xffffff, 0.4));
-  const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-  dirLight.position.set(5, 10, 5); // slightly behind pitcher, angled down
+
+  const hemiLight = new THREE.HemisphereLight(0xb1e1ff, 0x8b4513, 0.4); 
+// Sky blue tint from above, dirt brown bounce from below
+  scene.add(hemiLight);
+
+  
+  const dirLight = new THREE.DirectionalLight(0xfff0e5, 1.0); // warm sunlight
+  dirLight.position.set(5, 10, 5);
   dirLight.castShadow = true;
 
   dirLight.shadow.mapSize.width = 1024;
@@ -159,11 +165,12 @@ function setupScene() {
   dirLight.shadow.camera.bottom = -20;
 
   const dirTarget = new THREE.Object3D();
-  dirTarget.position.set(0, 0, 0); // focus light on the mound
+  dirTarget.position.set(0, 0, 0);
   scene.add(dirTarget);
   dirLight.target = dirTarget;
 
   scene.add(dirLight);
+
 
 
   const plateLight = new THREE.PointLight(0xffffff, 0.6, 100);
