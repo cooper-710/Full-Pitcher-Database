@@ -118,6 +118,14 @@ function setupScene() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x222222);
 
+  // === Mound ===
+  const moundGeometry = new THREE.CylinderGeometry(1.5, 1.5, 0.2, 64);
+  const moundMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 }); // Brown
+  const mound = new THREE.Mesh(moundGeometry, moundMaterial);
+  mound.position.set(0, 0, 0);  // Just beneath the pitch release point
+  scene.add(mound);
+
+
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
   camera.position.set(0, 2.5, -65);
   camera.lookAt(0, 2.5, 0);
