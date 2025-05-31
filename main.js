@@ -1,3 +1,4 @@
+import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.148.0/examples/jsm/controls/OrbitControls.js';
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.148.0/build/three.module.js';
 
 // === UI Styling (Professional + Mobile-Responsive) ===
@@ -142,6 +143,11 @@ function setupScene() {
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
   camera.position.set(0, 2.5, -65);
   camera.lookAt(0, 2.5, 0);
+
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.target.set(0, 2.5, 0);
+  controls.update();
+
   scene.add(camera);
   
   scene.add(new THREE.AmbientLight(0xffffff, 0.4));
