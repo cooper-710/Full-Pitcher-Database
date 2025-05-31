@@ -1,4 +1,6 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.148.0/build/three.module.js';
+import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.148.0/examples/jsm/controls/OrbitControls.min.js';
+
 // === UI Styling (Professional + Mobile-Responsive) ===
 const style = document.createElement('style');
 style.innerHTML = `
@@ -141,6 +143,14 @@ function setupScene() {
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
   camera.position.set(0, 2.5, -65);
   camera.lookAt(0, 2.5, 0);
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.target.set(0, 2.5, 0);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.05;
+  controls.minDistance = 30;
+  controls.maxDistance = 120;
+  controls.maxPolarAngle = Math.PI / 2.2;
+  controls.update();
   scene.add(camera);
   
   scene.add(new THREE.AmbientLight(0xffffff, 0.4));
