@@ -126,10 +126,10 @@ function setupScene() {
   scene.add(mound);
 
   // === Pitcher's Rubber ===
-  const rubberGeometry = new THREE.BoxGeometry(0.6, 0.05, 0.18); // Width, height, depth in feet
+  const rubberGeometry = new THREE.BoxGeometry(1, 0.05, 0.18); // Width, height, depth in feet
   const rubberMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
   const rubber = new THREE.Mesh(rubberGeometry, rubberMaterial);
-  rubber.position.set(0, 2.025, 0);
+  rubber.position.set(0, 1.025, 0);
   scene.add(rubber);
 
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
