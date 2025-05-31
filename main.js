@@ -116,7 +116,7 @@ function setupScene() {
   renderer.shadowMap.enabled = true;
 
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xADD8E6);
+  scene.background = new THREE.Color(0x87CEEB);
 
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
   camera.position.set(0, 2.5, -65);
