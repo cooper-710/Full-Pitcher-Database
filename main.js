@@ -114,6 +114,7 @@ function setupScene() {
   renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap; // enables soft shadowing
 
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x222222);
@@ -124,6 +125,9 @@ function setupScene() {
   const mound = new THREE.Mesh(moundGeometry, moundMaterial);
   mound.position.set(0, 0, 0);  // Just beneath the pitch release point
   scene.add(mound);
+  mound.receiveShadow = true;
+  mound.castShadow = false;
+
 
   // === Pitcher's Rubber ===
   const rubberGeometry = new THREE.BoxGeometry(1, 0.05, 0.18); // Width, height, depth in feet
@@ -131,6 +135,9 @@ function setupScene() {
   const rubber = new THREE.Mesh(rubberGeometry, rubberMaterial);
   rubber.position.set(0, 1.025, 0);
   scene.add(rubber);
+  rubber.castShadow = true;
+  rubber.receiveShadow = true;
+
 
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
   camera.position.set(0, 2.5, -65);
@@ -140,7 +147,17 @@ function setupScene() {
   scene.add(new THREE.AmbientLight(0xffffff, 0.4));
   const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
   dirLight.position.set(-10, 15, -25);
+  dirLight.castShadow = true;
+  dirLight.shadow.mapSize.width = 1024;
+  dirLight.shadow.mapSize.height = 1024;
+  dirLight.shadow.camera.near = 1;
+  dirLight.shadow.camera.far = 100;
+  dirLight.shadow.camera.left = -50;
+  dirLight.shadow.camera.right = 50;
+  dirLight.shadow.camera.top = 50;
+  dirLight.shadow.camera.bottom = -50;
   scene.add(dirLight);
+
   const plateLight = new THREE.PointLight(0xffffff, 0.6, 100);
   plateLight.position.set(0, 3, -60.5);
   scene.add(plateLight);
@@ -151,6 +168,7 @@ function setupScene() {
   );
   ground.rotation.x = -Math.PI / 2;
   scene.add(ground);
+  ground.receiveShadow = true;
 
   const zone = new THREE.LineSegments(
     new THREE.EdgesGeometry(new THREE.PlaneGeometry(1.42, 2.0)),
