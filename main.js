@@ -116,18 +116,7 @@ function setupScene() {
   renderer.shadowMap.enabled = true;
 
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x87CEEB);
-
- // === Mound ===
-  const moundGeometry = new THREE.CylinderGeometry(1.5, 1.5, 0.2, 32);
-  const moundMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 }); // SaddleBrown
-  const mound = new THREE.Mesh(moundGeometry, moundMaterial);
-
-// Put mound at the pitcher's origin (where you release pitches from)
-  mound.position.set(0, -2.13, 0);  // Match release point y
-  scene.add(mound);
-
-
+  scene.background = new THREE.Color(0x222222);
 
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
   camera.position.set(0, 2.5, -65);
@@ -151,7 +140,7 @@ function setupScene() {
 
   const zone = new THREE.LineSegments(
     new THREE.EdgesGeometry(new THREE.PlaneGeometry(1.42, 2.0)),
-    new THREE.LineBasicMaterial({ color: 0x000000 })
+    new THREE.LineBasicMaterial({ color: 0xffffff })
   );
   zone.position.set(0, 2.5, -60.5);
   scene.add(zone);
