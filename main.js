@@ -1,6 +1,4 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.148.0/build/three.module.js';
-import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.148.0/examples/jsm/controls/OrbitControls.js';
-
 // === UI Styling (Professional + Mobile-Responsive) ===
 const style = document.createElement('style');
 style.innerHTML = `
@@ -144,11 +142,7 @@ function setupScene() {
   camera.position.set(0, 2.5, -65);
   camera.lookAt(0, 2.5, 0);
   scene.add(camera);
-  const controls = new OrbitControls(camera, renderer.domElement);
-  controls.target.set(0, 2.5, 0);  // Focus point (the mound area)
-  controls.update();
-
-
+  
   scene.add(new THREE.AmbientLight(0xffffff, 0.4));
 
   const hemiLight = new THREE.HemisphereLight(0xb1e1ff, 0x8b4513, 0.4); 
